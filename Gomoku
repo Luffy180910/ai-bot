@@ -1,0 +1,123 @@
+#include<iostream>
+#include<cstdlib>
+#include<ctime>
+
+#define map_size 15 //棋盘大小 15*15
+using namespace std;
+
+int map[map_size][map_size];
+
+int move_map[3][2] = { 0,1,1,1,1,0 };//向 右，右下，下 移动 
+int move_map2[8][2] = { 1,0,-1,0,0,1,1,0,1,1,-1,-1,1,-1,-1,1 };
+//棋盘图像化
+void outlook() {
+    cout << endl;
+    for (int i = 0; i < map_size * 2 + 2; i++) {
+        cout << "*";
+    }
+    cout << endl;
+    for (int i = 0; i < map_size; i++) {
+        
+        cout << "*" ;
+        for (int j = 0; j < map_size; j++) {
+            if (map[i][j] == 0)
+                std::cout << "  ";
+            if (map[i][j] == 1)
+                std::cout << " #";
+            if (map[i][j] == 2)
+                std::cout << " @";
+        }
+        cout <<"*"<< endl;
+    }
+    for (int i = 0; i < map_size * 2 + 2; i++) {
+        cout << "*";
+    }
+    cout << endl<<endl;
+}
+
+//下棋落子
+int man_bot_move(int x, int y, int the_mover) {
+    int temp = map[x][y];
+    map[x][y] = the_mover;
+    return temp;
+}
+
+//局势评分 1.0 版本
+int value() {
+    int value_number = 0;
+    for(int k=0;k<3;k++){
+        for (int i = 0; i < map_size; i++) {
+            for (int j = 0; j < map_size; j++) {
+                if (j + move_map[k][1] < map_size &&i + move_map[k][0]<map_size&&map[i][j] == 1 && map[i + move_map[k][0]][j+move_map[k][1]]==1)
+                    value_number += 10;
+            }
+        }
+    }
+    return value_number;
+}
+//局势评分 2.0 版本
+int value2(int x, int y) {
+
+}
+
+
+//n步杀判断
+
+
+
+// 人工智障 1.0
+void ai_bot_1() 
+{
+    int value_pre = value();
+    int value_post = 0;
+    srand((unsigned)time(0));
+    int condition = 1000;
+    while(condition--) {
+        
+        int x = rand() % map_size;
+        int y = rand() % map_size;
+        if (map[x][y] != 0) {
+            continue;
+        }
+        int pre_mover = man_bot_move(x, y, 1);
+        value_post = value();
+        /*
+        检查可用语句
+        cout << "finding " << " x=" << x << " y=" << y <<" value= "<<value_post<<" condition="<<condition << endl;
+        */
+        if (value_pre < value_post)
+            condition = 0;
+        else
+            man_bot_move(x, y, pre_mover);
+    }
+}
+
+//主程序
+int main() {
+    map[7][7] = 1;
+    map[7][8] = 1;
+    map[8][7] = 1;
+    map[8][8] = 1;
+
+   
+    outlook();
+    
+    ai_bot_1();   
+    outlook();
+    ai_bot_1();
+    outlook();
+    ai_bot_1();
+    outlook();
+    ai_bot_1();
+    outlook();
+    ai_bot_1();
+    outlook();
+    ai_bot_1();
+    outlook();
+    ai_bot_1();
+    outlook();
+    ai_bot_1();
+    outlook();
+
+   
+}
